@@ -1,95 +1,80 @@
-#!/usr/bin/env python
-# coding: utf-8
+import random
+import re
 
-# In[ ]:
-
-
-get_ipython().system('pip install nltk')
-
-
-# In[ ]:
-
-
-##pip install nltk
-import nltk
-from nltk.chat.util import Chat, reflections
-
-nltk.download('punkt')
-pairs = [
-    [
-        r"my name is (.*)",
-        ["Hello %1, how are you today?",]
+responses = {
+    "hello": [
+        "Hello! How can I help you today?",
+        "Hi there! Nice to meet you.",
+        "Hey! What can I do for you?"
     ],
-    [
-        r"hi|hey|hello",
-        ["Hello", "Hey there",]
+    "hi": [
+        "Hi! How are you?",
+        "Hello! How can I assist you?"
     ],
-    [
-        r"what is your name?",
-        ["I am a chatbot created by you. You can call me ChatBot.",]
+    "how are you": [
+        "I'm doing great! Thanks for asking.",
+        "I'm fine and ready to chat!"
     ],
-    [
-        r"how are you?",
-        ["I'm doing good, thank you! How can I help you today?",]
+    "name": [
+        "I'm a Python chatbot.",
+        "You can call me PyBot!"
     ],
-    [
-        r"sorry (.*)",
-        ["It's alright", "No problem",]
+    "joke": [
+        "Why don't scientists trust atoms? Because they make up everything!",
+        "Why did the computer go to the doctor? Because it had a virus!"
     ],
-    [
-        r"I am (.*) (good|well|okay|ok)",
-        ["Glad to hear that!", "Alright, great!",]
+    "bye": [
+        "Goodbye! Have a great day!",
+        "Bye! It was nice chatting with you.",
+        "See you later!"
     ],
-    [
-        r"(.*) (location|city) ?",
-        ["I am a virtual being, I don't have a physical location.",]
-    ],
-    [
-        r"(.*) created (you|yourself)?",
-        ["I was created by a Python enthusiast.", "Someone who loves programming created me."]
-    ],
-    [
-        r"(.*) (raining|rain) ?",
-        ["I don't have real-time weather data, but you can check online!"]
-    ],
-    [
-        r"quit",
-        ["Bye, take care!", "Goodbye!"]
-    ],
-]
-
-reflections = {
-    "i am"       : "you are",
-    "i was"      : "you were",
-    "i"          : "you",
-    "i'd"        : "you would",
-    "i've"       : "you have",
-    "i'll"       : "you will",
-    "my"         : "your",
-    "you are"    : "I am",
-    "you were"   : "I was",
-    "you've"     : "I have",
-    "you'll"     : "I will",
-    "your"       : "my",
-    "yours"      : "mine",
-    "you"        : "me",
-    "me"         : "you"
+    "thanks": [
+        "You're welcome!",
+        "No problem!",
+        "Happy to help!"
+    ]
 }
 
 
-def chatbot():
-    print("Hi, I'm the chatbot you created. How can I help you today? (type 'quit' to exit)")
+def get_response(user_input):
+    user_input = user_input.lower().strip()
 
-    chat = Chat(pairs, reflections)
-    chat.converse()
+    # Check exact phrases first
+    for key, reply_list in responses.items():
+        if key in user_input:
+            return random.choice(reply_list)
+
+    # Basic pattern matching
+    if re.search(r"\b(what|who)\b.*\b(you|your)\b", user_input):
+        return "I'm PyBot, a simple Python chatbot."
+
+    if re.search(r"\b(help|assist)\b", user_input):
+        return "Sure! You can ask me about my name, tell me a joke, or simply chat with me."
+
+    return "I'm sorry, I don't understand that yet. Try asking me something else."
+
+
+def chatbot():
+    print("=" * 50)
+    print("🤖 Welcome to PyBot!")
+    print("💬 Start chatting with the chatbot.")
+    print("🚪 Type 'bye' to exit.")
+    print("=" * 50)
+
+    while True:
+        user_input = input("\n👤 You: ")
+
+        if not user_input.strip():
+            print("🤖 Bot: Please type something.")
+            continue
+
+        response = get_response(user_input)
+
+        print(f"🤖 Bot: {response}")
+
+        if "bye" in user_input.lower():
+            break
+
 
 if __name__ == "__main__":
     chatbot()
-
-
-
-# In[ ]:
-
-
-
-
